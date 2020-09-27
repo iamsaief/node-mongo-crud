@@ -5,16 +5,87 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Node Mongo Crud 🌲</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+
+		<style>
+			.btn-sm {
+				line-height: 1;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="container mt-4">
-			<h1>Hello there! I'm from mongo 👋</h1>
-			<form action="/addProduct" method="post" class="form-inline mt-3">
-				<input type="text" class="form-control mr-2" name="name" placeholder="Product name" />
-				<input type="number" class="form-control mr-2" name="price" placeholder="Price" />
-				<input type="number" class="form-control mr-2" name="quantity" placeholder="Quantity" />
-				<button type="submit" class="btn btn-primary">Add Product</button>
-			</form>
+			<div class="row">
+				<div class="col-8">
+					<h1>Hi there! I'm from mongoDB 👋</h1>
+					<form action="/addProduct" method="post" class="form-inline mt-3">
+						<input type="text" class="form-control mr-2" name="name" placeholder="Product name" />
+						<input type="number" class="form-control mr-2" name="price" placeholder="Price" />
+						<input type="number" class="form-control mr-2" name="quantity" placeholder="Quantity" />
+						<button type="submit" class="btn btn-primary">Add Product</button>
+					</form>
+
+					<div id="products" class="mt-3"></div>
+					<div id="update" class="mt-3"></div>
+				</div>
+			</div>
 		</div>
+
+		<script>
+			const loadAllProducts = () => {
+				fetch("/products")
+					.then((res) => res.json())
+					.then((products) => {
+						const div = document.getElementById("products");
+						products.forEach((pd) => {
+							const p = document.createElement("p");
+							p.innerHTML = `
+                            <strong>Name : </strong>${pd.name}  - 
+                            <strong>Price : </strong>${pd.price} - 
+                            <strong>Quantity : </strong>${pd.quantity}
+                            <button class="ml-2 btn btn-success btn-sm" onclick="loadProduct('${pd._id}')">update</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct('${pd._id}')">delete</button>
+                        `;
+							div.appendChild(p);
+						});
+					});
+			};
+			loadAllProducts();
+
+			const deleteProduct = (id) => {
+				console.log(id);
+				fetch(`/delete/${id}`, {
+					method: "DELETE",
+				})
+					.then((res) => res.json())
+					.then((result) => {
+						console.log(result);
+					});
+			};
+
+			const loadProduct = (id) => {
+				fetch(`/product/${id}`)
+					.then((res) => res.json())
+					.then((pd) => {
+						const div = document.getElementById("update");
+						div.innerHTML = `
+                            <hr>
+                            <h6>Updating: <em>${pd._id}</em></h6>
+                            <div class="d-flex mb-1">
+                                <span class="mr-2">Price: 
+                                    <input type="number" class="form-control form-control-sm" id="price" value="${pd.price}"/>
+                                </span>
+                                <span class="mr-2">Quantity: 
+                                    <input type="number" class="form-control form-control-sm" id="quantity" value="${pd.quantity}"/>
+                                </span>
+                            </div>
+                            <button class="btn btn-success btn-sm" onclick="updateProduct('${pd._id}')">submit</button>
+                        `;
+					});
+			};
+
+			const updateProduct = (id) => {
+				console.log(id);
+			};
+		</script>
 	</body>
 </html>
