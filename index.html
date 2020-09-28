@@ -36,6 +36,8 @@
 					.then((res) => res.json())
 					.then((products) => {
 						const div = document.getElementById("products");
+						div.innerHTML = "";
+
 						products.forEach((pd) => {
 							const p = document.createElement("p");
 							p.innerHTML = `
@@ -43,7 +45,7 @@
                             <strong>Price : </strong>${pd.price} - 
                             <strong>Quantity : </strong>${pd.quantity}
                             <button class="ml-2 btn btn-success btn-sm" onclick="loadProduct('${pd._id}')">update</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteProduct('${pd._id}')">delete</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(event,'${pd._id}')">delete</button>
                         `;
 							div.appendChild(p);
 						});
@@ -51,14 +53,34 @@
 			};
 			loadAllProducts();
 
-			const deleteProduct = (id) => {
-				console.log(id);
+			const deleteProduct = (event, id) => {
 				fetch(`/delete/${id}`, {
 					method: "DELETE",
 				})
 					.then((res) => res.json())
 					.then((result) => {
-						console.log(result);
+						if (result) {
+							event.target.parentNode.style.display = "none";
+						}
+					});
+			};
+
+			const updateProduct = (id) => {
+				const price = document.getElementById("price").value;
+				const quantity = document.getElementById("quantity").value;
+				const product = { id, price, quantity };
+
+				fetch(`/update/${id}`, {
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(product),
+				})
+					.then((res) => res.json())
+					.then((result) => {
+						if (result) {
+							loadAllProducts();
+							document.getElementById("update").innerHTML = "";
+						}
 					});
 			};
 
@@ -81,10 +103,6 @@
                             <button class="btn btn-success btn-sm" onclick="updateProduct('${pd._id}')">submit</button>
                         `;
 					});
-			};
-
-			const updateProduct = (id) => {
-				console.log(id);
 			};
 		</script>
 	</body>

@@ -37,13 +37,28 @@ client.connect((err) => {
 		const product = req.body;
 		collection.insertOne(product).then((result) => {
 			console.log("Product Inserted ✅");
-			res.send("Success 🤘");
+			res.redirect("/");
 		});
+	});
+
+	app.patch("/update/:id", (req, res) => {
+		collection
+			.updateOne(
+				{ _id: ObjectId(req.params.id) },
+				{ $set: { price: req.body.price, quantity: req.body.quantity } }
+			)
+			.then((result) => {
+				console.log(result, "updated on DB ✅");
+				res.send(result.modifiedCount > 0);
+			});
 	});
 
 	app.delete("/delete/:id", (req, res) => {
 		console.log(req.params.id);
-		collection.deleteOne({ _id: ObjectId(req.params.id) }).then((result) => console.log(result));
+		collection.deleteOne({ _id: ObjectId(req.params.id) }).then((result) => {
+			console.log(result);
+			res.send(result.deletedCount > 0);
+		});
 	});
 
 	// client.close();
