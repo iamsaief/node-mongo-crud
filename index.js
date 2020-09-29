@@ -2,11 +2,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const ObjectId = require("mongodb").ObjectId;
+require("dotenv").config();
 
-const mongoPassword = "uKWhQu6YPc2pyME";
+const mongoPassword = process.env.DB_PASS;
 
-const uri =
-	"mongodb+srv://MongoCrudUser:uKWhQu6YPc2pyME@cluster0.e8uzr.mongodb.net/mongocruddb?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.e8uzr.mongodb.net/mongocruddb?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();

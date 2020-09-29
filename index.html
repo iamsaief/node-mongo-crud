@@ -41,12 +41,12 @@
 						products.forEach((pd) => {
 							const p = document.createElement("p");
 							p.innerHTML = `
-                            <strong>Name : </strong>${pd.name}  - 
-                            <strong>Price : </strong>${pd.price} - 
-                            <strong>Quantity : </strong>${pd.quantity}
-                            <button class="ml-2 btn btn-success btn-sm" onclick="loadProduct('${pd._id}')">update</button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(event,'${pd._id}')">delete</button>
-                        `;
+								<strong>Name : </strong>${pd.name}  - 
+								<strong>Price : </strong>${pd.price} - 
+								<strong>Quantity : </strong>${pd.quantity}
+								<button class="ml-2 btn btn-success btn-sm" onclick="loadProduct('${pd._id}')">update</button>
+								<button class="btn btn-danger btn-sm" onclick="deleteProduct(event,'${pd._id}')">delete</button>
+							`;
 							div.appendChild(p);
 						});
 					});
